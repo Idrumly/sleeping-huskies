@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "files": {
+    "index.html": "2923bf83e1e7fc39841c6065ac106ffeb55adc4fa9337972c9f31aa7258cebcf",
+    "style.css": "a84b4cfeef233fc5472b9109ac26e5afc0a0a299295f09c0a0df3989a67f526f",
+    "engine.js": "59170fcb0de52599bef862c858d5f79b48bc2b7efb6b05d81303f2a36fdab97e",
+    "microphone.js": "2be29cdf2e0f33ef667c111797744edc79738013a6ff7a0c70b95f224ceadcbb",
+    "app.js": "f6e90b972e9287c11557282fdd89503c807adb85cd8555ad33a4130a19a66094",
+    "concept.png": "4a43db0959ecb43a1a1702983236fab8fb3bc5f589b4be6645dfc3ffcc302e79"
+  }
+}
