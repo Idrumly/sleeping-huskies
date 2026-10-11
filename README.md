@@ -4,6 +4,6 @@ A cooperative classroom sound-level game. Open the published site in a browser, 
 
 Audio is analysed locally, never recorded or uploaded by the game. No camera access, analytics, student accounts, or remote score storage. The hosting provider may keep normal web access logs. Scores last only for the current session.
 
-Beta 0.1.0: working timer, activity presets, simulated and microphone input, wake-up/recovery, and simple concept pose motion. The main family illustration is static; full character animation and classroom calibration are still in development.
+Beta 0.2.0: a layered animated family with sleeping, stirring, wriggling, and awake poses; staggered breathing and movement; optional synthesized whimper warnings with volume and preview. In microphone mode, focus time and wake-up freeze for 2.8 seconds around each warning to avoid speaker feedback. Warnings are muted by default, rearm after settling, and have a 20-second cooldown. Classroom calibration is still in development.
 
 Refresh to load updates. Microphone settings depend on the browser and device.

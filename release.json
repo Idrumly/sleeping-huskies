@@ -1,11 +1,15 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "files": {
-    "index.html": "2923bf83e1e7fc39841c6065ac106ffeb55adc4fa9337972c9f31aa7258cebcf",
-    "style.css": "a84b4cfeef233fc5472b9109ac26e5afc0a0a299295f09c0a0df3989a67f526f",
+    "index.html": "79438be56b2ccc76d8d6692b46153b3ff9061e10484cd74a86d4bb5c3f53065d",
+    "style.css": "05abd454ffe7199564cc05e70710c17994f388be360981307004b302ebd6bb7d",
     "engine.js": "59170fcb0de52599bef862c858d5f79b48bc2b7efb6b05d81303f2a36fdab97e",
     "microphone.js": "2be29cdf2e0f33ef667c111797744edc79738013a6ff7a0c70b95f224ceadcbb",
-    "app.js": "f6e90b972e9287c11557282fdd89503c807adb85cd8555ad33a4130a19a66094",
-    "concept.png": "4a43db0959ecb43a1a1702983236fab8fb3bc5f589b4be6645dfc3ffcc302e79"
+    "warnings.js": "c8a8c94fd4981a1b863e882e4bf9c633daea93f652862dca6b5dc2bfb015f216",
+    "family.js": "caf2d9f839c2429351aa0041f8a110ae5d95924b99587393e11a83475bccdd3d",
+    "app.js": "c786044ab147562a249cda5d3f247ad5241eb62c8f41309767c88c37f5b3e6e7",
+    "concept.png": "4a43db0959ecb43a1a1702983236fab8fb3bc5f589b4be6645dfc3ffcc302e79",
+    "husky-atlas.png": "2e1c526fd24fbaa417bdd5f91b55e603abda23a7e3247183a1c9e8b3bd992d85",
+    "den.png": "bb4c6b7c7836492879f87d9bf96ec2f30ea003071aad9bc9b2b0d7a2120d204e"
   }
 }
