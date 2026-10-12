@@ -1,7 +1,7 @@
 (function(root){
  'use strict';
  class HuskyFamily {
-  constructor(canvas,onError){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.atlas=new Image();this.ready=false;this.time=0;this.level=0;this.frames=[];this.poses=[0,0,0,0];this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.atlas.onload=()=>{try{this.prepare();this.ready=true;}catch{onError('The husky artwork could not load. Refresh to retry.');}};this.atlas.onerror=()=>onError('The husky artwork did not load. Refresh to retry.');this.atlas.src='husky-atlas.png';}
+  constructor(canvas,onError){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.atlas=new Image();this.ready=false;this.time=0;this.level=0;this.frames=[];this.poses=[0,0,0,0];this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.atlas.onload=()=>{try{this.prepare();this.ready=true;}catch{onError('The husky artwork could not load. Refresh to retry.');}};this.atlas.onerror=()=>onError('The husky artwork did not load. Refresh to retry.');this.atlas.src='husky-personalities.png?v=0.3.0';}
   prepare(){const image=this.atlas,cw=Math.floor(image.width/4);const rows=[0,.29,.50,.71,1].map(v=>Math.floor(v*image.height));const scratch=document.createElement('canvas');scratch.width=image.width;scratch.height=image.height;const c=scratch.getContext('2d');c.drawImage(image,0,0);const bitmap=c.getImageData(0,0,image.width,image.height),pixels=bitmap.data;
    // Runtime paper matte: only edge-connected neutral white is excluded.
    // Enclosed white fur remains opaque; the original atlas is left unchanged.
@@ -12,9 +12,9 @@
   }
   draw(game,dt,paused){if(!this.ready)return;const c=this.ctx,w=1200,h=675;if(this.canvas.width!==w){this.canvas.width=w;this.canvas.height=h;}const move=!paused&&!this.reduced.matches&&['playing','countdown'].includes(game.status);if(move)this.time+=dt;const desired=game.status==='lost'?100:game.status==='won'?0:game.wake;this.level+=(desired-this.level)*(1-Math.exp(-dt*3));if(this.reduced.matches||paused)this.level=desired;c.clearRect(0,0,w,h);
    const placements=[{x:600,y:478,size:580},{x:370,y:577,size:275},{x:608,y:587,size:267},{x:850,y:576,size:278}];
-   for(let row=0;row<4;row++){const p=placements[row],phase=this.time*(row?1.7:1.2)+row*1.9;const awake=game.status==='lost';let target;if(row===0)target=awake?3:this.level>75?2:this.level>42?1:0;else{const wake=this.level+(row-2)*5;target=awake?3:wake>72?3:wake>42?2:wake>18?1:0;}
+   for(let row=0;row<4;row++){const p=placements[row],target=root.HuskyBehavior.poseFor(row,this.level,game.status);
     if(this.reduced.matches||paused)this.poses[row]=target;else this.poses[row]+=Math.sign(target-this.poses[row])*Math.min(Math.abs(target-this.poses[row]),dt*4);const pose=this.poses[row];const a=Math.floor(pose),b=Math.min(3,a+1),mix=pose-a;const data=this.frames[row],scale=p.size/data.maxW;
-    const restless=move&&this.level>42&&row>0,breath=move?Math.sin(phase)*.012:0;const shift=restless?Math.sin(phase*2)*4:0;c.save();c.translate(p.x+shift,p.y);if(restless)c.rotate(Math.sin(phase)*.022);c.scale(1,1+breath);
+    const m=move?root.HuskyBehavior.motionFor(row,this.time,this.level):{x:0,y:0,rotation:0,sx:1,sy:1};c.save();c.translate(p.x+m.x,p.y+m.y);c.rotate(m.rotation);c.scale(m.sx,m.sy);
     const drawFrame=(i,alpha)=>{if(alpha<=0)return;const f=data.frames[i];c.globalAlpha=alpha;c.drawImage(this.surface,f.x,f.y,f.w,f.h,-f.w*scale/2,-f.h*scale,f.w*scale,f.h*scale);};drawFrame(a,1-mix);if(b!==a)drawFrame(b,mix);c.restore();
    }
   }

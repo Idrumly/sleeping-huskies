@@ -1,15 +1,17 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "files": {
-    "index.html": "79438be56b2ccc76d8d6692b46153b3ff9061e10484cd74a86d4bb5c3f53065d",
+    "index.html": "d55610e17f188192479d58af3533a00f4ff175061055acfeb566eb482be3de56",
     "style.css": "242bcbdaab0a0cd7d9b7f3ff3f77c485dda5348354327314a45a4a5f98c42e16",
     "engine.js": "59170fcb0de52599bef862c858d5f79b48bc2b7efb6b05d81303f2a36fdab97e",
     "microphone.js": "2be29cdf2e0f33ef667c111797744edc79738013a6ff7a0c70b95f224ceadcbb",
     "warnings.js": "c8a8c94fd4981a1b863e882e4bf9c633daea93f652862dca6b5dc2bfb015f216",
-    "family.js": "caf2d9f839c2429351aa0041f8a110ae5d95924b99587393e11a83475bccdd3d",
+    "family-behavior.js": "f491c11736c21724d872eb6841d1072faa403813c467700cfe45f373d38ea570",
+    "family.js": "42ee623c23a79d2cca81e1c7e0dbff31cb2fc068250c25169d56484499104818",
     "app.js": "c786044ab147562a249cda5d3f247ad5241eb62c8f41309767c88c37f5b3e6e7",
     "concept.png": "4a43db0959ecb43a1a1702983236fab8fb3bc5f589b4be6645dfc3ffcc302e79",
     "husky-atlas.png": "2e1c526fd24fbaa417bdd5f91b55e603abda23a7e3247183a1c9e8b3bd992d85",
+    "husky-personalities.png": "ebfbc8fa6dfd89f913f6976261fb7a92b6437df5709ac7fc80dce98bb291e7d8",
     "den.png": "bb4c6b7c7836492879f87d9bf96ec2f30ea003071aad9bc9b2b0d7a2120d204e"
   }
 }
