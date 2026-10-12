@@ -15,5 +15,5 @@
   if(row===2)return {x:5*active,y:-1.2*active,rotation:.035*active*Math.sin(cycle*3.2),sx:1-.008*active,sy:1+breathing+.006*active};
   return {x:0,y:-2.5*active,rotation:-.013*active,sx:1,sy:1+breathing+.008*active};
  }
- const api={poseFor,motionFor};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.HuskyBehavior=api;
+ const api={poseFor,motionFor,thresholds:profiles.map(p=>p.thresholds)};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.HuskyBehavior=api;
 })(globalThis);

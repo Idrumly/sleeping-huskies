@@ -4,7 +4,7 @@ let game=E.create(),sound=15,pulse=0,winCount=0,earned=0,previous=performance.no
 const live=()=>['countdown','playing','paused'].includes(game.status);
 const isMic=()=>$('inputMode').value==='mic';
 const warnings=new window.PuppyWarnings(window);
-const family=new window.HuskyFamily($('family'),message=>{$('artStatus').textContent=message;});
+const family=new window.HuskyFamily($('family'),message=>{$('artStatus').textContent=message;},()=>{$('artStatus').textContent='Quiet helps the family slowly settle back into sleep.';});
 const warningText=()=>{ $('warningToggle').setAttribute('aria-pressed',warnings.enabled);$('warningToggle').textContent=warnings.enabled?'Mute whimper warnings':'Enable whimper warnings';$('warningTest').disabled=!warnings.enabled;};
 $('warningToggle').onclick=async()=>{if(warnings.enabled){warnings.disable();$('warningStatus').textContent='Warnings off. Visual cues remain available.';}else{try{$('warningToggle').disabled=true;await warnings.enable();$('warningStatus').textContent='Warnings on. One soft cue when wriggling begins; at least 20 seconds between warnings.';}catch{warnings.disable();$('warningStatus').textContent='Sound could not start. Try Enable again; visual cues still work.';}finally{$('warningToggle').disabled=false;}}warningText();};
 $('warningTest').onclick=()=>{if(!live()&&warnings.play(performance.now()/1000))$('warningStatus').textContent='Playing a sample whimper. Adjust the volume to suit your room.';};
@@ -43,7 +43,7 @@ function render(){
  $('wake').value=game.wake;$('wakeText').textContent=names[band]+' · '+Math.round(game.wake)+'%';
  $('banner').textContent=status==='countdown'?'Settle in · '+Math.ceil(game.countdown):status==='won'?'You kept the family asleep. Well done!':status==='lost'?'They’re awake! Let’s try another nap.':status==='paused'?'Take your time. The challenge is paused.':status==='ready'?'A little quiet. A lovely long nap.':names[band];
  $('hint').textContent=status==='playing'?(band>=2?'Quieter now… give the pups a chance to settle.':'Keep the sound below your goal to protect their nap.'):status==='won'?'Challenge complete. Start another nap whenever you’re ready.':status==='lost'?'Sustained noise filled the wake-up meter. Try returning to quiet sooner.':status==='paused'?'Time and restlessness are frozen. Resume includes a settling countdown.':'Brief noises cause a small stir. Sustained noise gradually wakes the family.';
- $('start').disabled=live()||(isMic()&&!mic.active);$('start').textContent=['won','lost'].includes(status)?'Try another nap':'Start nap';$('pause').disabled=!live()||(status==='paused'&&isMic()&&!mic.active);$('pause').textContent=status==='paused'?'Resume challenge':'Pause for instructions';
+ $('start').disabled=!family.ready||live()||(isMic()&&!mic.active);$('start').textContent=['won','lost'].includes(status)?'Try another nap':'Start nap';$('pause').disabled=!live()||(status==='paused'&&isMic()&&!mic.active);$('pause').textContent=status==='paused'?'Resume challenge':'Pause for instructions';
  $('inputMode').disabled=live();$('device').disabled=live()||mic.pending||mic.active;$('enableMic').disabled=mic.pending||mic.active;$('stopMic').disabled=!mic.pending&&!mic.active;
  $('warningTest').disabled=live()||!warnings.enabled;
  if(isMic()&&game.status==='playing'&&warnings.gate.protected(performance.now()/1000))$('banner').textContent='A gentle warning · focus time briefly held';

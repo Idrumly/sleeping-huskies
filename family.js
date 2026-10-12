@@ -1,23 +1,67 @@
-(function(root){
+﻿(function(root){
  'use strict';
+ const names=['mom','charcoal','silver','russet'];
  class HuskyFamily {
-  constructor(canvas,onError){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.atlas=new Image();this.ready=false;this.time=0;this.level=0;this.frames=[];this.poses=[0,0,0,0];this.reduced=matchMedia('(prefers-reduced-motion: reduce)');this.atlas.onload=()=>{try{this.prepare();this.ready=true;}catch{onError('The husky artwork could not load. Refresh to retry.');}};this.atlas.onerror=()=>onError('The husky artwork did not load. Refresh to retry.');this.atlas.src='husky-personalities.png?v=0.3.0';}
-  prepare(){const image=this.atlas,cw=Math.floor(image.width/4);const rows=[0,.29,.50,.71,1].map(v=>Math.floor(v*image.height));const scratch=document.createElement('canvas');scratch.width=image.width;scratch.height=image.height;const c=scratch.getContext('2d');c.drawImage(image,0,0);const bitmap=c.getImageData(0,0,image.width,image.height),pixels=bitmap.data;
-   // Runtime paper matte: only edge-connected neutral white is excluded.
-   // Enclosed white fur remains opaque; the original atlas is left unchanged.
-   const count=image.width*image.height,seen=new Uint8Array(count),queue=new Int32Array(count);let head=0,tail=0;
-   const visit=n=>{if(n<0||n>=count||seen[n])return;seen[n]=1;const i=n*4,min=Math.min(pixels[i],pixels[i+1],pixels[i+2]),max=Math.max(pixels[i],pixels[i+1],pixels[i+2]);if(min>225&&max-min<24){queue[tail++]=n;pixels[i+3]=0;}};
-   for(let x=0;x<image.width;x++){visit(x);visit(count-image.width+x);}for(let y=0;y<image.height;y++){visit(y*image.width);visit(y*image.width+image.width-1);}while(head<tail){const n=queue[head++],x=n%image.width;if(x>0)visit(n-1);if(x<image.width-1)visit(n+1);visit(n-image.width);visit(n+image.width);}c.putImageData(bitmap,0,0);this.surface=scratch;
-   for(let row=0;row<4;row++){const y0=rows[row],ch=rows[row+1]-y0,frames=[];for(let col=0;col<4;col++){let minX=cw,minY=ch,maxX=0,maxY=0;for(let y=0;y<ch;y++)for(let x=0;x<cw;x++){const i=((y0+y)*image.width+col*cw+x)*4;if(pixels[i+3]>32&&Math.min(pixels[i],pixels[i+1],pixels[i+2])<235){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);}}frames.push({x:col*cw+minX,y:y0+minY,w:maxX-minX+1,h:maxY-minY+1});}const maxW=Math.max(...frames.map(f=>f.w)),maxH=Math.max(...frames.map(f=>f.h));this.frames.push({frames,maxW,maxH});}
+  constructor(canvas,onError,onReady=()=>{}){
+   this.canvas=canvas;this.ctx=canvas.getContext('2d');this.ready=false;this.time=0;
+   this.sheets=[];this.tracks=names.map((_,i)=>new root.HuskyTransition.PoseTrack(i));
+   this.reduced=matchMedia('(prefers-reduced-motion: reduce)');
+   Promise.all(names.map(name=>new Promise((resolve,reject)=>{
+    const image=new Image();image.onload=()=>{try{resolve(this.prepare(image));}catch(e){reject(e);}};
+    image.onerror=reject;image.src='motion-'+name+'-v4.png';
+   }))).then(sheets=>{this.sheets=sheets;this.ready=true;onReady();}).catch(()=>onError('The husky animation could not load. Refresh to retry.'));
   }
-  draw(game,dt,paused){if(!this.ready)return;const c=this.ctx,w=1200,h=675;if(this.canvas.width!==w){this.canvas.width=w;this.canvas.height=h;}const move=!paused&&!this.reduced.matches&&['playing','countdown'].includes(game.status);if(move)this.time+=dt;const desired=game.status==='lost'?100:game.status==='won'?0:game.wake;this.level+=(desired-this.level)*(1-Math.exp(-dt*3));if(this.reduced.matches||paused)this.level=desired;c.clearRect(0,0,w,h);
+  prepare(image){
+   const w=image.width,h=image.height,surface=document.createElement('canvas');surface.width=w;surface.height=h;
+   const c=surface.getContext('2d');c.drawImage(image,0,0);
+   const bitmap=c.getImageData(0,0,w,h),pixels=bitmap.data,count=w*h;
+   // Composite paper-backed drawings without erasing enclosed white fur.
+   const seen=new Uint8Array(count),queue=new Int32Array(count);let head=0,tail=0;
+   const visit=n=>{if(n<0||n>=count||seen[n])return;seen[n]=1;const i=n*4,min=Math.min(pixels[i],pixels[i+1],pixels[i+2]),max=Math.max(pixels[i],pixels[i+1],pixels[i+2]);if(min>225&&max-min<24){queue[tail++]=n;pixels[i+3]=0;}};
+   for(let x=0;x<w;x++){visit(x);visit(count-w+x);}for(let y=0;y<h;y++){visit(y*w);visit(y*w+w-1);}
+   while(head<tail){const n=queue[head++],x=n%w;if(x>0)visit(n-1);if(x<w-1)visit(n+1);visit(n-w);visit(n+w);}
+   c.putImageData(bitmap,0,0);
+   const ink=(x,y)=>{const i=(y*w+x)*4;return pixels[i+3]>32&&Math.min(pixels[i],pixels[i+1],pixels[i+2])<235;};
+   // Find actual gutters: fixed quarter-height cuts could clip ears or paws.
+   const gutters=(length,other,vertical)=>{
+    const boundaries=[0];
+    for(let n=1;n<4;n++){
+     let best=Infinity,runs=[],run=null;
+     const lo=Math.floor(length*(n/4-.06)),hi=Math.ceil(length*(n/4+.06));
+     for(let a=lo;a<=hi;a++){
+      let amount=0;for(let b=0;b<other;b++)if(vertical?ink(b,a):ink(a,b))amount++;
+      if(amount<best){best=amount;runs=[];run=null;}
+      if(amount===best){if(run&&run[1]===a-1)run[1]=a;else {run=[a,a];runs.push(run);}}else run=null;
+     }
+     const gap=runs.sort((a,b)=>(b[1]-b[0])-(a[1]-a[0]))[0];boundaries.push(Math.round((gap[0]+gap[1])/2));
+    }boundaries.push(length);return boundaries;
+   };
+   const rows=gutters(h,w,true),cols=gutters(w,h,false),frames=[];
+   for(let row=0;row<4;row++)for(let col=0;col<4;col++){
+    let minX=w,minY=h,maxX=-1,maxY=-1;
+    for(let y=rows[row];y<rows[row+1];y++)for(let x=cols[col];x<cols[col+1];x++)if(ink(x,y)){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);}
+    if(maxX<minX)throw new Error('Missing animation frame');
+    frames.push({x:minX,y:minY,w:maxX-minX+1,h:maxY-minY+1});
+   }
+   return {surface,frames,maxW:Math.max(...frames.map(f=>f.w)),maxH:Math.max(...frames.map(f=>f.h))};
+  }
+  draw(game,dt,paused){
+   if(!this.ready)return;
+   const c=this.ctx,freeze=game.status==='paused',still=paused||this.reduced.matches;
+   const move=!still&&!freeze&&['playing','countdown'].includes(game.status);
+   if(move)this.time+=dt;c.clearRect(0,0,1200,675);
    const placements=[{x:600,y:478,size:580},{x:370,y:577,size:275},{x:608,y:587,size:267},{x:850,y:576,size:278}];
-   for(let row=0;row<4;row++){const p=placements[row],target=root.HuskyBehavior.poseFor(row,this.level,game.status);
-    if(this.reduced.matches||paused)this.poses[row]=target;else this.poses[row]+=Math.sign(target-this.poses[row])*Math.min(Math.abs(target-this.poses[row]),dt*4);const pose=this.poses[row];const a=Math.floor(pose),b=Math.min(3,a+1),mix=pose-a;const data=this.frames[row],scale=p.size/data.maxW;
-    const m=move?root.HuskyBehavior.motionFor(row,this.time,this.level):{x:0,y:0,rotation:0,sx:1,sy:1};c.save();c.translate(p.x+m.x,p.y+m.y);c.rotate(m.rotation);c.scale(m.sx,m.sy);
-    const drawFrame=(i,alpha)=>{if(alpha<=0)return;const f=data.frames[i];c.globalAlpha=alpha;c.drawImage(this.surface,f.x,f.y,f.w,f.h,-f.w*scale/2,-f.h*scale,f.w*scale,f.h*scale);};drawFrame(a,1-mix);if(b!==a)drawFrame(b,mix);c.restore();
+   for(let row=0;row<4;row++){
+    const track=this.tracks[row],stage=root.HuskyTransition.stableStage(root.HuskyBehavior.thresholds[row],game.wake,track.stage,game.status);
+    const index=track.update(stage,dt,{freeze,immediate:still||game.status==='ready'});
+    const data=this.sheets[row],f=data.frames[index],scale=Math.min(placements[row].size/data.maxW,(row===0?440:330)/data.maxH);
+    const p=placements[row],m=move?root.HuskyBehavior.motionFor(row,this.time,game.wake):{x:0,y:0,rotation:0,sx:1,sy:1};
+    c.save();c.translate(p.x+m.x,p.y+m.y);c.rotate(m.rotation);c.scale(m.sx,m.sy);
+    // One fully opaque drawing, shared scale and bottom-center ground anchor.
+    c.drawImage(data.surface,f.x,f.y,f.w,f.h,-f.w*scale/2,-f.h*scale,f.w*scale,f.h*scale);c.restore();
    }
   }
  }
  root.HuskyFamily=HuskyFamily;
 })(window);
+
