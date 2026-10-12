@@ -1,15 +1,15 @@
 {
-  "version": "0.4.0",
+  "version": "0.5.0",
   "files": {
-    "index.html": "3ee4fc03941d842b0b7ef4fb83fbb1eb19e408b435587deb0388017a67ef0553",
-    "style.css": "242bcbdaab0a0cd7d9b7f3ff3f77c485dda5348354327314a45a4a5f98c42e16",
+    "index.html": "0aafae44f73dbea311713ee5ebd4e9a7dd7b6585f1f5cb999cf88a719614fdc0",
+    "style.css": "75a7d01bf35acc3b1b59fdb1c436ab9826a994fed141cedcaab2be79e267ed4c",
     "engine.js": "59170fcb0de52599bef862c858d5f79b48bc2b7efb6b05d81303f2a36fdab97e",
     "microphone.js": "2be29cdf2e0f33ef667c111797744edc79738013a6ff7a0c70b95f224ceadcbb",
     "warnings.js": "c8a8c94fd4981a1b863e882e4bf9c633daea93f652862dca6b5dc2bfb015f216",
-    "family-transition.js": "f07f12c421e51d50dc2476c9f9ea1b622128f2e1acf4fce84303003f7883a463",
-    "family-behavior.js": "86265060baadcfa288e0cf9e9e616cd622e40065fbfbfce27ebad19b386f06c9",
-    "family.js": "1f6c616b88a040eeb20e71056011ac4fb8c391fbe58746f0329518cb0c89e6c1",
-    "app.js": "61e6a13b298587eef854e00c5abf2cb9f499ada307c64f8a89535a4a080c0ffa",
+    "family-transition.js": "d5c6e735a5015aa56e33ba968bf22d8b7c99c96b652e1823b64a4b4e05ca7c4a",
+    "family-behavior.js": "64292bbecb0621332bae7889bd6f44d7ae01f4ad94292899ea998e1302b72ae0",
+    "family.js": "f692995a2c464f45ce6757c17a2350ecfda67adb75306ea0798aec10130ab7bf",
+    "app.js": "a3ae79a631001268d852ba3f7f37ac7142c2087c12a1ea6d006b54247feeaea4",
     "concept.png": "4a43db0959ecb43a1a1702983236fab8fb3bc5f589b4be6645dfc3ffcc302e79",
     "husky-atlas.png": "2e1c526fd24fbaa417bdd5f91b55e603abda23a7e3247183a1c9e8b3bd992d85",
     "husky-personalities.png": "ebfbc8fa6dfd89f913f6976261fb7a92b6437df5709ac7fc80dce98bb291e7d8",
@@ -17,6 +17,10 @@
     "motion-mom-v4.png": "b618a81ca696183f61836412027dd7e61924945c06ade7bbe98af3218da60e05",
     "motion-charcoal-v4.png": "899c8a8e0fe4a10d21c954f23195fcbfac4bfa541d0fd86ce5b0cdf80af26985",
     "motion-silver-v4.png": "c85e5654774755ee0e86acd576be17240d08ee32de2d46f5dcb87836531d97f4",
-    "motion-russet-v4.png": "a79e62c5b4f816b7aa286c765d782504d8eb2403a0431cc17c6eb17752248ad4"
+    "motion-russet-v4.png": "a79e62c5b4f816b7aa286c765d782504d8eb2403a0431cc17c6eb17752248ad4",
+    "motion-mom-v5.png": "a3e9c303f2eacc753c850aefa0fc56fd6cfb19c1b2c036740d8d187f8202080d",
+    "motion-charcoal-v5.png": "7cd5d3bf8d89acb49f23d5171f33927f766c5645ca449fe699185e35b2f6b533",
+    "motion-silver-v5.png": "ca6b21b6ef13fe55e64b0e0939ae82a336677501ac128e5435255c547fe21a4d",
+    "motion-russet-v5.png": "1a711610e2e236eaa387e55ebc209b4259286989f92b375b32d64d2fd95ac7ee"
   }
 }

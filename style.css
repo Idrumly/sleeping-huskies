@@ -6,3 +6,5 @@
 @media(max-width:550px){.scene{aspect-ratio:16/9;background-size:cover}.scene .banner{font-size:11px;padding:5px 10px}}
 #family{mix-blend-mode:multiply}
 #family{mix-blend-mode:normal}
+
+.family-order{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;list-style:none;padding:0;margin:12px 24px 24px}.family-order li{border:2px solid #d6dacb;border-radius:12px;padding:10px 4px;text-align:center;background:#f8f6ed}.family-order span{display:block;font-size:12px;font-weight:700;letter-spacing:.04em}.family-order strong{display:block;margin-top:4px;font-size:14px}.family-order .awake{border-color:#a5681d;background:#fff0d6;color:#71450d}@media(max-width:520px){.family-order{margin-inline:12px;gap:5px}.family-order strong{font-size:12px}}

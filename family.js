@@ -4,11 +4,11 @@
  class HuskyFamily {
   constructor(canvas,onError,onReady=()=>{}){
    this.canvas=canvas;this.ctx=canvas.getContext('2d');this.ready=false;this.time=0;
-   this.sheets=[];this.tracks=names.map((_,i)=>new root.HuskyTransition.PoseTrack(i));
+   this.sheets=[];this.timeline=new root.HuskyTransition.FamilyTimeline(root.HuskyBehavior.thresholds,root.HuskyBehavior.awakeAt);this.tracks=this.timeline.tracks;
    this.reduced=matchMedia('(prefers-reduced-motion: reduce)');
    Promise.all(names.map(name=>new Promise((resolve,reject)=>{
     const image=new Image();image.onload=()=>{try{resolve(this.prepare(image));}catch(e){reject(e);}};
-    image.onerror=reject;image.src='motion-'+name+'-v4.png';
+    image.onerror=reject;image.src='motion-'+name+'-v5.png';
    }))).then(sheets=>{this.sheets=sheets;this.ready=true;onReady();}).catch(()=>onError('The husky animation could not load. Refresh to retry.'));
   }
   prepare(image){
@@ -23,11 +23,11 @@
    c.putImageData(bitmap,0,0);
    const ink=(x,y)=>{const i=(y*w+x)*4;return pixels[i+3]>32&&Math.min(pixels[i],pixels[i+1],pixels[i+2])<235;};
    // Find actual gutters: fixed quarter-height cuts could clip ears or paws.
-   const gutters=(length,other,vertical)=>{
+   const gutters=(length,other,vertical,parts)=>{
     const boundaries=[0];
-    for(let n=1;n<4;n++){
+    for(let n=1;n<parts;n++){
      let best=Infinity,runs=[],run=null;
-     const lo=Math.floor(length*(n/4-.06)),hi=Math.ceil(length*(n/4+.06));
+     const radius=.28/parts,lo=Math.floor(length*(n/parts-radius)),hi=Math.ceil(length*(n/parts+radius));
      for(let a=lo;a<=hi;a++){
       let amount=0;for(let b=0;b<other;b++)if(vertical?ink(b,a):ink(a,b))amount++;
       if(amount<best){best=amount;runs=[];run=null;}
@@ -36,8 +36,8 @@
      const gap=runs.sort((a,b)=>(b[1]-b[0])-(a[1]-a[0]))[0];boundaries.push(Math.round((gap[0]+gap[1])/2));
     }boundaries.push(length);return boundaries;
    };
-   const rows=gutters(h,w,true),cols=gutters(w,h,false),frames=[];
-   for(let row=0;row<4;row++)for(let col=0;col<4;col++){
+   const rows=gutters(h,w,true,6),cols=gutters(w,h,false,8),frames=[];
+   for(let row=0;row<6;row++)for(let col=0;col<8;col++){
     let minX=w,minY=h,maxX=-1,maxY=-1;
     for(let y=rows[row];y<rows[row+1];y++)for(let x=cols[col];x<cols[col+1];x++)if(ink(x,y)){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);}
     if(maxX<minX)throw new Error('Missing animation frame');
@@ -50,10 +50,10 @@
    const c=this.ctx,freeze=game.status==='paused',still=paused||this.reduced.matches;
    const move=!still&&!freeze&&['playing','countdown'].includes(game.status);
    if(move)this.time+=dt;c.clearRect(0,0,1200,675);
+   const indices=this.timeline.update(game,dt,{freeze,immediate:still||game.status==='ready'});
    const placements=[{x:600,y:478,size:580},{x:370,y:577,size:275},{x:608,y:587,size:267},{x:850,y:576,size:278}];
    for(let row=0;row<4;row++){
-    const track=this.tracks[row],stage=root.HuskyTransition.stableStage(root.HuskyBehavior.thresholds[row],game.wake,track.stage,game.status);
-    const index=track.update(stage,dt,{freeze,immediate:still||game.status==='ready'});
+    const index=indices[row];
     const data=this.sheets[row],f=data.frames[index],scale=Math.min(placements[row].size/data.maxW,(row===0?440:330)/data.maxH);
     const p=placements[row],m=move?root.HuskyBehavior.motionFor(row,this.time,game.wake):{x:0,y:0,rotation:0,sx:1,sy:1};
     c.save();c.translate(p.x+m.x,p.y+m.y);c.rotate(m.rotation);c.scale(m.sx,m.sy);
