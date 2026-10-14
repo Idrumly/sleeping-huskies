@@ -4,10 +4,10 @@
   // at one third that speed. Softer excess noise still rises more slowly.
   const MAX_WAKE_RATE=12, RECOVERY_RATE=MAX_WAKE_RATE/3;
   const presets = {reading:{name:'Quiet Reading',threshold:30},classwork:{name:'Focused Classwork',threshold:45},partner:{name:'Partner Work',threshold:60}};
-  function create(duration=30, threshold=30) { return {status:'ready',duration,remaining:duration,threshold,wake:0,countdown:5}; }
+  function create(duration=30, threshold=30) { return {status:'ready',duration,remaining:duration,threshold,wake:0,countdown:10}; }
   function start(s) { if(s.status==='ready') s.status='countdown'; }
   function pause(s) { if(['playing','countdown'].includes(s.status)) {s.status='paused';} }
-  function resume(s) {if(s.status==='paused') {s.countdown=5;s.status='countdown';}}
+  function resume(s) {if(s.status==='paused') {s.countdown=10;s.status='countdown';}}
   function step(s,dt,level) {
     if(!Number.isFinite(dt)||dt<=0) return;
     level=Number.isFinite(level)?Math.min(100,Math.max(0,level)):0;

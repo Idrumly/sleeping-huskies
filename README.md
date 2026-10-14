@@ -1,9 +1,13 @@
-# Sleeping Huskies classroom beta
+# Sleeping Huskies
 
-A cooperative classroom sound-level game. Open the published site in a browser, select Live microphone, and enable microphone access. Demo mode works without hardware. No account required.
+A cooperative classroom focus game. Open the website in Chrome, enable your microphone, choose an activity, and calibrate it using eight seconds of acceptable classroom sound. Fine-tune the sound goal while watching the live meter, then start your quest.
 
-Audio is analysed locally, never recorded or uploaded by the game. No camera access, analytics, student accounts, or remote score storage. The hosting provider may keep normal web access logs. Scores last only for the current session.
+The pups begin awake and settle during a ten-second get-ready countdown. Focus time starts afterwards. Sustained quiet settles the wake-up meter at one third its maximum rising speed. Complete the quest to earn a family stretch-and-play celebration. A noisy ending freezes the scene without the celebration.
 
-Beta 0.5.0: a layered animated family with 48 sequential drawings per character, reversible movement between states instead of cross-fades, two-second waking transitions and slower settling; eyes-closed yawns and an enforced Pup 1, Pup 2, Pup 3, Mom wake order; individual pup stretches, rolls and head tilts; independent breathing rhythms and intermittent movements; mom covers her ears at the highest warning level; optional synthesized whimper warnings with volume and preview. In microphone mode, focus time and wake-up freeze for 2.8 seconds around each warning to avoid speaker feedback. Warnings are muted by default, rearm after settling, and have a 20-second cooldown. Classroom calibration is still in development.
+Teacher settings hide during play; reopen them using the top button. Microphone simulation and diagnostic pose controls have been removed. Optional whimper warnings remain off by default. Scoring and focus time hold briefly during a warning so the game cannot wake itself up through speaker feedback.
 
-Refresh to load updates. Microphone settings depend on the browser and device.
+Audio is measured locally, never recorded or uploaded by this game. No camera access, analytics, student accounts, or remote score storage. The hosting provider may keep normal web access logs. Sound values are relative microphone units, not calibrated decibels. Goals and scores last for the current page session; recalibrate when changing rooms or input settings.
+
+Pause, hiding the tab, input interruption, reset and quest completion stop microphone capture. Enable the microphone again before resuming or starting another quest. Reduced motion and Pause character motion remain available.
+
+Version 0.6.0. School access was confirmed by the teacher with the previous version. Updated calibration and acoustics still need classroom feedback. Refresh the page to load updates.

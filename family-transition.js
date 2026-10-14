@@ -36,9 +36,17 @@
   constructor(thresholds,awakeAt){this.thresholds=thresholds;this.awakeAt=awakeAt;this.tracks=[0,1,2,3].map(i=>new PoseTrack(i));this.held=[0,0,0,0];this.lastStatus='ready';}
   reset(){this.tracks.forEach(t=>t.snap(0));this.held.fill(0);}
   update(game,dt,{freeze=false,immediate=false}={}){
-   if(game.status==='ready'||(game.status==='countdown'&&['ready','won','lost'].includes(this.lastStatus)))this.reset();
-   this.lastStatus=game.status;
+   const previousStatus=this.lastStatus;this.lastStatus=game.status;
    if(freeze||game.status==='paused')return this.frames;
+   if(game.status==='ready'){this.reset();this.tracks.forEach((track,row)=>track.snap(row===0?0:3));return this.frames;}
+   if(game.status==='lost')return this.frames;
+   if(game.status==='countdown'){
+    if(previousStatus!=='countdown'){this.settling=this.frames.slice();this.resuming=previousStatus==='paused';}
+    if(!this.resuming){const progress=1-Math.max(0,Math.min(10,game.countdown??10))/10,eased=progress*progress*(3-2*progress);this.tracks.forEach((track,row)=>{track.position=track.from=track.to=immediate?0:this.settling[row]*(1-eased);track.stage=0;track.elapsed=track.duration=0;});}
+    return this.frames;
+   }
+   if(previousStatus==='countdown'&&!this.resuming)this.reset();
+   if(game.status==='won')game={...game,status:'playing',wake:100};
    // Bounded substeps keep wake sequencing independent of the display rate.
    let remaining=Math.max(0,dt);
    do{
